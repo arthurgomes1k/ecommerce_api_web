@@ -40,11 +40,13 @@ public class UserService {
     public User save(User user, List<UUID> roleIds) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         // Verificar se as roles existem e adicioná-las ao usuário
-        for (UUID roleId : roleIds) {
-            Optional<Role> roleOptional = roleService.findById(roleId);
-            if (roleOptional.isPresent()) {
-                Role role = roleOptional.get();
-                user.getRoles().add(role);
+        if (roleIds != null) {
+            for (UUID roleId : roleIds) {
+                Optional<Role> roleOptional = roleService.findById(roleId);
+                if (roleOptional.isPresent()) {
+                    Role role = roleOptional.get();
+                    user.getRoles().add(role);
+                }
             }
         }
         return userRepository.save(user);
